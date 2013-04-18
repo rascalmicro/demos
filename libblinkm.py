@@ -34,3 +34,11 @@ def blinkm_set_rgb(address, red, green, blue):
 def blinkm_get_rgb(address):
     rgb = pytronics.i2cRead(int(address), 0x67, 'I', 3)
     return json.dumps(zip(['red', 'green', 'blue'], rgb))
+
+@public.route('/blinkm/stop/<address>', methods=['GET', 'POST'])
+def blinkm_stop(address):
+    import subprocess
+    cmd = ('blinkm stop-script -d ' + address)
+    print cmd
+    subprocess.Popen([cmd], shell=True)
+    return 'Blinkm at address {0} stopped'.format(address)
