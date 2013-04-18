@@ -22,8 +22,7 @@ def draw_filled_rectangle(x1, y1, x2, y2, color):
     upper_color_byte = (hex_color[0] >> 3 << 3) + (hex_color[1] >> 5) # RRRRR GGG
     lower_color_byte = (hex_color[1] >> 2 << 5) % 256 + (hex_color[2] >> 3) # GGG BBBBB
     #print bin(upper_color_byte), bin(lower_color_byte)
-    # probably need to cast x1, x2, y1, y2 to ints here
-    pytronics.serialWrite(chr(0xFF) + chr(0xC4) + chr(x1/256) + chr(x1%256) + chr(y1/256) + chr(y1%256)+ chr(x2/256) + chr(x2%256)+ chr(y2/256) + chr(y2%256) + chr(upper_color_byte) + chr(lower_color_byte), 9600)
+    pytronics.serialWrite(chr(0xFF) + chr(0xC4) + chr(int(x1)/256) + chr(int(x1)%256) + chr(int(y1)/256) + chr(int(y1)%256)+ chr(int(x2)/256) + chr(int(x2)%256)+ chr(int(y2)/256) + chr(int(y2)%256) + chr(upper_color_byte) + chr(lower_color_byte), 9600)
     return  'Rectangle drawn'
 
 def draw_sinusoidal_grating(period):
