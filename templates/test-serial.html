@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Serial Communication</title>
+    {% include "include/rascal-head.html" %}
+    <style>
+        .well.i2c {
+            color: #F8F8F8;
+            background-color: #333;
+            border-color: #222;
+        }
+    </style>
+</head>
+<body>
+    {% include "include/rascal-topbar.html" %}
+    <div class="container">
+        <div class="well rascal">
+            <h1>Test Serial Communication</h1>
+            <div class="well i2c">
+                <div class="row">
+                    <div class="span4">
+                        <div class="control-group">
+                            <label class="control-label" for="size_byte">Transfer speed</label>
+                            <select>
+                                <option>9600 bps</option>
+                                <option>19200 bps</option>
+                                <option>38400 bps</option>
+                                <option>57600 bps</option>
+                                <option>115200 bps</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="span1">
+                        <label class="radio">
+                            <input type="radio" name="optionsRadios" id="optionsRadios1" value="option1" checked>
+                            8 bits
+                        </label>
+                        <label class="radio">
+                            <input type="radio" name="optionsRadios" id="optionsRadios2" value="option2">
+                            9 bits
+                        </label>
+                    </div>
+                    <div class="span2">
+                        <label class="radio">
+                            <input type="radio" name="optionsRadios" id="optionsRadios1" value="option1" checked>
+                            No parity
+                        </label>
+                        <label class="radio">
+                            <input type="radio" name="optionsRadios" id="optionsRadios2" value="option2">
+                            Parity
+                        </label>
+                    </div>
+                    <div class="span2">
+                        <label class="radio">
+                            <input type="radio" name="optionsRadios" id="optionsRadios1" value="option1" checked>
+                            1 stop bit
+                        </label>
+                        <label class="radio">
+                            <input type="radio" name="optionsRadios" id="optionsRadios2" value="option2">
+                            2 stop bits
+                        </label>
+                    </div>
+                </div>  <!-- ./row -->
+                <hr />
+                <div class="row">
+                    <div class="span4">
+                        <label>Data to write</label>
+                        <textarea id="data-to-write" rows="3" class="span4" placeholder="Enter some characters here"></textarea>
+                    </div>
+                    <div class="span4">
+                        <label>Data to read</label>
+                        <textarea id="data-to-read" rows="3" class="span4" placeholder="No data read yet"></textarea>
+                    </div>
+                </div> <!-- ./row -->
+                <div class="row">
+                    <div class="span4">
+                        <button id="write" class="btn btn-large btn-primary rascal">Write</button>
+                    </div>
+                    <div class="span4">
+                        <input id="bytes-to-read" type="text" class="span2 offset2" placeholder="Bytes to read">
+                        <button id="read" class="btn btn-large btn-danger rascal">Read</button>
+                    </div>
+                </div> <!-- ./row -->
+            </div> <!-- /.well i2c -->
+            <div id="cmd">&nbsp;</div>
+            <div id="status">&nbsp;</div>
+        </div> <!-- /.well rascal -->
+    </div> <!-- /.container -->
+    <script type="text/javascript">
+        $('#read').click(function () {
+            "use strict";
+            var
+                addr = $('#address').attr('value'),
+                reg = $('#register').attr('value'),
+                size = $('input:radio:checked').attr('value'),
+                cmd;
+            if (addr !== '') {
+                if (reg === '') {
+                    reg = '0';
+                }
+                cmd = "/i2cget/" + addr + "/" + reg + '/' + size;
+                showCommand(cmd);
+                $.get(cmd, function (data, textStatus) {
+                    $('#result10').attr('value', data);
+                    $('#result16').attr('value', '0x' + parseInt(data, 10).toString(16));
+                    if (parseInt(data, 10) !== -1) {
+                        showStatus(data);
+                    } else {
+                        showStatus('Couldn\'t read from this address');
+                    }
+                }).error(function (jqXHR, textStatus, errorThrown) {
+                    showStatus('Error: ' + errorThrown);
+                });
+            } else {
+                showStatus('Chip address required');
+            }
+        });
+
+        $('#write').click(function () {
+            "use strict";
+            var
+                addr = $('#address').attr('value'),
+                reg = $('#register').attr('value'),
+                val = $('#data').attr('value'),
+                size = $('input:radio:checked').attr('value'),
+                cmd;
+            if (addr !== '') {
+                if (reg === '') {
+                    reg = '0';
+                }
+                if (val === '') {
+                    val = '0';
+                }
+                cmd = "/i2cset/" + addr + "/" + reg + "/" + val + '/' + size;
+                showCommand(cmd);
+                $.get(cmd, function (data, textStatus) {
+                    $('#result10').attr('value', data);
+                    $('#result16').attr('value', '0x' + parseInt(data, 10).toString(16));
+                    if (parseInt(data, 10) === 0) {
+                        showStatus('Success');
+                    } else {
+                        showStatus('Couldn\'t write to this address');
+                    }
+                }).error(function (jqXHR, textStatus, errorThrown) {
+                    showStatus('Error: ' + errorThrown);
+                });
+            } else {
+                showStatus('Chip address required');
+            }
+        });
+    </script>
+</body>
+</html>
