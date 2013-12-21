@@ -82,11 +82,11 @@ def i2cget(addr, reg, mode):
     ireg = int(reg, 0)
     try:
         res = pytronics.i2cRead(iaddr, ireg, mode)
-        print '## i2cget ## {0}'.format(res)
+        print('## i2cget ## {0}'.format(res))
         return str(res)
     except (OSError, IOError) as e:
         import errno
-        print '## i2cget ## Error: [{0}] {1}'.format(errno.errorcode[e.errno], e.strerror)
+        print('## i2cget ## Error: [{0}] {1}'.format(errno.errorcode[e.errno], e.strerror))
         return str(-1)
     except Exception as e:
         return 'Internal server error', 500
@@ -98,11 +98,11 @@ def i2cset(addr, reg, val, mode):
     ival = int(val, 0)
     try:
         pytronics.i2cWrite(iaddr, ireg, ival, mode)
-        print '## i2cset ##'
+        print('## i2cset ##')
         return str(0)
     except (OSError, IOError) as e:
         import errno
-        print '## i2cset ## Error: [{0}] {1}'.format(errno.errorcode[e.errno], e.strerror)
+        print('## i2cset ## Error: [{0}] {1}'.format(errno.errorcode[e.errno], e.strerror))
         return str(-1)
     except Exception as e:
         return 'Internal server error', 500
@@ -112,7 +112,7 @@ def i2c_read():
     import json
     try:
         params = json.loads(request.form['params'])
-        print '## i2c_read ## ' + str(params)
+        print('## i2c_read ## ' + str(params))
         value = pytronics.i2cRead(params['addr'], params['reg'], params['size'], params['length'])
         result = {
             'success': True,
@@ -121,7 +121,7 @@ def i2c_read():
         return json.dumps(result)
     except (OSError, IOError) as e:
         import errno
-        print '## i2c_read ## Error: [{0}] {1}'.format(errno.errorcode[e.errno], e.strerror)
+        print('## i2c_read ## Error: [{0}] {1}'.format(errno.errorcode[e.errno], e.strerror))
         result = {
             'success': False,
             'errorCode': errno.errorcode[e.errno],
@@ -136,7 +136,7 @@ def i2c_write():
     import json
     try:
         params = json.loads(request.form['params'])
-        print '## i2c_write ## ' + str(params)
+        print('## i2c_write ## ' + str(params))
         pytronics.i2cWrite(params['addr'], params['reg'], params['value'], params['size'])
         result = {
             'success': True
@@ -144,7 +144,7 @@ def i2c_write():
         return json.dumps(result)
     except (OSError, IOError) as e:
         import errno
-        print '## i2c_write ## Error: [{0}] {1}'.format(errno.errorcode[e.errno], e.strerror)
+        print('## i2c_write ## Error: [{0}] {1}'.format(errno.errorcode[e.errno], e.strerror))
         result = {
             'success': False,
             'errorCode': errno.errorcode[e.errno],
