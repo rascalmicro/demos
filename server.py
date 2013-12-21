@@ -144,7 +144,7 @@ def update_relay(num):
 def parse_sms():
     import subprocess, webcolors
     message = request.form['Body']
-    print "Received text message: " + str(message)
+    print("Received text message: " + str(message))
     color = webcolors.name_to_rgb(message)
     cmd = 'blinkm set-rgb -d 9 -r ' + str(color[0]) + ' -g ' + str(color[1]) + ' -b ' + str(color[2])
     subprocess.Popen([cmd], shell=True)
@@ -169,11 +169,11 @@ def clear_lcd():
 def set_color():
     import colorsys, kinet, subprocess
     color = request.form['color']
-    print "RGB = " + str(color)
+    print("RGB = " + str(color))
     pds = kinet.PowerSupply("192.168.10.57")
     pds.append(kinet.FixtureRGB(0))
     hsv = (colorsys.rgb_to_hsv(int(color[0:2], 16)/255.0, int(color[2:4], 16)/255.0, int(color[4:6], 16)/255.0))
-    print "HSV = " + str(hsv)
+    print("HSV = " + str(hsv))
     pds[0].hsv = hsv
     pds.go()
     return ('color sent to Color Kinetics box')
@@ -228,21 +228,21 @@ def xupload_file():
             # Check file type and folder
             filename = secure_filename(request.headers['X-File-Name'])
             if not allowed_file(filename):
-                print '## xupload ## bad file type ' + filename
+                print('## xupload ## bad file type ' + filename)
                 return 'Forbidden', 403
             try:
                 folder = request.headers['X-Folder']
             except:
                 folder = ''
             if not allowed_folder(folder):
-                print '## xupload ## bad folder ' + folder
+                print('## xupload ## bad folder ' + folder)
                 return 'Forbidden', 403
             fpath = os.path.join(root, os.path.join(folder, filename))
             # Write out the stream
             f = file(fpath, 'wb')
             f.write(request.stream.read())
             f.close()
-            print '## xupload ## ' + fpath
+            print('## xupload ## ' + fpath)
         except RequestEntityTooLarge:
             return 'File too large', 413
         except:
@@ -259,8 +259,8 @@ def list_directory():
         return json.JSONEncoder().encode(dirlist)
     except OSError:
         return 'Not Found', 404
-    except Exception, e:
-        print '## list_directory ## {0}'.format(e)
+    except Exception as e:
+        print('## list_directory ## {0}'.format(e))
     return 'Bad request', 400
 
 @public.route('/clear-directory', methods=['POST'])
@@ -277,14 +277,14 @@ def clear_directory():
             try:
                 if os.path.isfile(file_path):
                     os.unlink(file_path)
-            except Exception, e:
-                print '## clear_directory ## {0}'.format(e)
+            except Exception as e:
+                print('## clear_directory ## {0}'.format(e))
                 return 'Bad request', 400
         return 'OK', 200
     except OSError:
         return 'Not Found', 404
-    except Exception, e:
-        print '## clear_directory ## {0}'.format(e)
+    except Exception as e:
+        print('## clear_directory ## {0}'.format(e))
     return 'Bad request', 400
 ### End of upload procedures ###
 
@@ -294,7 +294,7 @@ def log_value(num):
     import datalogger
     artemp = pytronics.i2cRead(0x48, 0, 'I', 2)
     ftemp = ((artemp[0] << 4) | (artemp[1] >> 4)) * 0.0625
-    # print '## temp_log ## ' + str(ftemp)
+    # print('## temp_log ## ' + str(ftemp))
     datalogger.log(ftemp)
 
 #@cron(-30, -1, -1, -1, -1)
@@ -302,7 +302,7 @@ def update_byhour(num):
     import datalogger
     rows = datalogger.update_byhour()
     if rows != 0:
-        print '## updatelog ## added {0} row(s)'.format(rows)
+        print('## updatelog ## added {0} row(s)'.format(rows))
 
 @public.route('/datalogger.html')
 def datalogger():
