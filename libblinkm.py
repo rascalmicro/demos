@@ -10,7 +10,7 @@ def blinkm_set_hsb(address, hue, saturation, brightness):
            ' -h ' + hue +
            ' -s ' + saturation +
            ' -b ' + brightness)
-    print cmd
+    print(cmd)
     subprocess.Popen([cmd], shell=True)
     return 'HSB triplet ({0}, {1}, {2}) sent to Blinkm at address {3}'.format(hue, saturation, brightness, address)
 
@@ -26,7 +26,7 @@ def blinkm_set_rgb(address, red, green, blue):
            ' -r ' + red +
            ' -g ' + green +
            ' -b ' + blue)
-    print cmd
+    print(cmd)
     subprocess.Popen([cmd], shell=True)
     return 'RGB triplet ({0}, {1}, {2}) sent to Blinkm at address {3}'.format(red, green, blue, address)
 
@@ -39,6 +39,6 @@ def blinkm_get_rgb(address):
 def blinkm_stop(address):
     import subprocess
     cmd = ('blinkm stop-script -d ' + address)
-    print cmd
+    print(cmd)
     subprocess.Popen([cmd], shell=True)
     return 'Blinkm at address {0} stopped'.format(address)
