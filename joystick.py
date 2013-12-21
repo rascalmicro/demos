@@ -46,7 +46,7 @@ class Motor:
 
         self.last_command_string = command_string
         pytronics.serialWrite(command_string, self.__class__.SERIAL_SPEED)
-        print command_string
+        print(command_string)
 
     def repeat_last_command_or_time_out(self):
         import time
