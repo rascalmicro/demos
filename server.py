@@ -152,6 +152,26 @@ def parse_sms():
     #f.write(str(message))
     #f.close()
     return ('Message processed')
+@public.route('/sms', methods=['POST'])
+def parse_sms():
+    import serial, webcolors
+    message = request.form['Body']
+    print("Received text message: " + str(message))
+    color = webcolors.name_to_rgb(message.replace(' ', ''))
+    cmd = str(color[0]) + ',' + str(color[1]) + ',' + str(color[2]) + '\n'
+    ser = serial.Serial(port = "/dev/ttyACM0", baudrate=9600)
+    ser.write(cmd)
+    #
+    # Control a Blinkm
+    #cmd = 'blinkm set-rgb -d 9 -r ' + str(color[0]) + ' -g ' + str(color[1]) + ' -b ' + str(color[2])
+    #subprocess.Popen([cmd], shell=True)
+    #
+    # Write to a file
+    #f = open('/var/www/public/thermostat-target.txt', 'w')
+    #f.write(str(message))
+    #f.close()
+    print('Wrote to USB: {0}'.format(cmd))
+    return ('<?xml version="1.0" encoding="UTF-8" ?><Response></Response>')
 
 # lcd (serial)
 @public.route('/send-to-lcd', methods=['POST'])
