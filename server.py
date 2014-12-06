@@ -142,22 +142,11 @@ def update_relay(num):
 
 @public.route('/sms', methods=['POST'])
 def parse_sms():
-    import subprocess, webcolors
-    message = request.form['Body']
-    print("Received text message: " + str(message))
-    color = webcolors.name_to_rgb(message)
-    cmd = 'blinkm set-rgb -d 9 -r ' + str(color[0]) + ' -g ' + str(color[1]) + ' -b ' + str(color[2])
-    subprocess.Popen([cmd], shell=True)
-    #f = open('/var/www/public/thermostat-target.txt', 'w')
-    #f.write(str(message))
-    #f.close()
-    return ('Message processed')
-@public.route('/sms', methods=['POST'])
-def parse_sms():
+    from xkcd_colors import xkcd_names_to_hex
     import serial, webcolors
     message = request.form['Body']
     print("Received text message: " + str(message))
-    color = webcolors.name_to_rgb(message.replace(' ', ''))
+    color = webcolors.hex_to_rgb(xkcd_names_to_hex[str(message.lower())])
     cmd = str(color[0]) + ',' + str(color[1]) + ',' + str(color[2]) + '\n'
     ser = serial.Serial(port = "/dev/ttyACM0", baudrate=9600)
     ser.write(cmd)
