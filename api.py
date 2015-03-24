@@ -15,14 +15,14 @@ def analog_read(pin_name):
     if pin_name not in ANALOG_PINS:
         return "You seem to be trying to read from analog pin {0}, which does not exist. Try A0, A1, A2, or A3.".format(pin_name)
     else:
-        return pytronics.analogRead(pin_name)
+        return str(pytronics.analogRead(pin_name))
 
 @public.route('/digital/read/<pin_name>', methods=['GET', 'POST'])
 def digital_read(pin_name):
     if pin_name not in DIGITAL_PINS:
         return DIGITAL_PIN_NAME_ERROR.format(pin_name)
     else:
-        return pytronics.digitalRead(pin_name)
+        return str(pytronics.digitalRead(pin_name))
 
 @public.route('/digital/write/<pin_name>', methods=['GET', 'POST'])
 def digital_write(pin_name):
