@@ -65,7 +65,7 @@ def digital_write_shortcut(pin_name, state):
     else:
         return DIGITAL_PIN_NAME_ERROR.format(pin_name)
 
-@public.route('/read-pins', methods=['POST'])
+@public.route('/read-pins', methods=['GET', 'POST'])
 def read_pins():
     import json
     # return json.dumps(pytronics.readPins(DIGITAL_PINS))
